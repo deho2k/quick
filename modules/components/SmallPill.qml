@@ -12,9 +12,7 @@ PillBase {
   Column {
     id: timeColumn
     anchors.centerIn: parent 
-    StyledText {
-      text: Qt.formatDateTime(clock.date, "hh:mm")
-    }
+    StyledText { text: Qt.formatDateTime(clock.date, "hh:mm") }
     Row {
       spacing: 5
       anchors.horizontalCenter: parent.horizontalCenter
@@ -22,7 +20,7 @@ PillBase {
         model: content.workspaces
         Rectangle {
           required property HyprlandWorkspace modelData
-          color: modelData.id == Hyprland.focusedWorkspace.id? Colors.primary : Colors.primary
+          color: modelData.id == Hyprland.focusedWorkspace.id? Colors.primary : Colors.primary_container
           radius: 5
           width: 5
           height: 5

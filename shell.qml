@@ -7,60 +7,60 @@ import Quickshell.Hyprland
 ShellRoot{
   id:shellRoot
 
-  Bar{id:bar;}
+  Pill {id:pill}
 
   Connections {
     target: Player.player
     ignoreUnknownSignals: true 
-    function onIsPlayingChanged()   { bar.showVariant(bar.variant.music) }
-    function onPostTrackChanged()   { bar.showVariant(bar.variant.music) }
-    function onVolumeChanged()      { bar.showVariant(bar.variant.music) }
+    function onIsPlayingChanged()   { pill.showVariant(pill.variant.music) }
+    function onPostTrackChanged()   { pill.showVariant(pill.variant.music) }
+    function onVolumeChanged()      { pill.showVariant(pill.variant.music) }
   }
   Connections {
     target: Pipewire
     ignoreUnknownSignals: true
-    function onVolumeLevelChanged() { bar.showVariant(bar.variant.volume) }
+    function onVolumeLevelChanged() { pill.showVariant(pill.variant.volume) }
   }
   Connections {
     target: Hyprland
     function onRawEvent(event) {
-      if (Hypr.onEvent(event) == Hypr.event.OpenedSubmap) { bar.changePill(bar.variant.submap) } 
-      if (Hypr.onEvent(event) == Hypr.event.ClosedSubmap) { bar.returnToMainPill() } 
+      if (Hypr.onEvent(event) == Hypr.event.OpenedSubmap) { pill.changePill(pill.variant.submap) } 
+      if (Hypr.onEvent(event) == Hypr.event.ClosedSubmap) { pill.returnToMainPill() } 
     }
   }
 
   GlobalShortcut {
     name: "show_variant_music" 
     description: "temporarly shows the music osd" 
-    onPressed: { bar.showVariant(bar.variant.music) }
+    onPressed: { pill.showVariant(pill.variant.music) }
   }
   GlobalShortcut {
     name: "toggle_bar" 
-    description: "toggles the quickshell bar" 
+    description: "toggles the quickshell pill" 
     onPressed: {
-      bar.visible = !bar.visible
+      pill.visible = !pill.visible
     }
   }
   GlobalShortcut {
     name: "toggle_pill" 
-    description: "toggles the quickshell bar's big pill" 
+    description: "toggles the quickshell pill's big pill" 
     onPressed: {
-      bar.togglePillSize()
+      pill.togglePillSize()
     }
   }
 
   GlobalShortcut {
     name: "toggle_search" 
-    description: "toggle the search bar" 
+    description: "toggle the search pill" 
     onPressed: {
-      bar.changePill(bar.variant.search)
+      pill.changePill(pill.variant.search)
     }
   }
   GlobalShortcut {
     name: "toggle_wallpaper" 
-    description: "toggle the search bar" 
+    description: "toggle the search pill" 
     onPressed: {
-      bar.changePill(bar.variant.wallpaper)
+      pill.changePill(pill.variant.wallpaper)
     }
   }
 }

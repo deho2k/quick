@@ -5,6 +5,8 @@ import QtQuick
 import Quickshell.Io
 Singleton {
   id:root
+  function alpha(base, amount) { return Qt.rgba(base.r, base.g, base.b, amount) }
+
   IpcHandler {
     target: "colors"
     function reload() {
