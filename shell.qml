@@ -57,6 +57,13 @@ ShellRoot{
     }
   }
   GlobalShortcut {
+    name: "toggle_settings" 
+    description: "toggle the settings pill" 
+    onPressed: {
+      pill.changePill(pill.variant.settings)
+    }
+  }
+  GlobalShortcut {
     name: "toggle_wallpaper" 
     description: "toggle the search pill" 
     onPressed: {

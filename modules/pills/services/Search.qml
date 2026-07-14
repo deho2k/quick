@@ -11,9 +11,9 @@ PillBase {
 
 
   property var appModel: DesktopEntries.applications.values
-  readonly property int rowHeight: 60
-  readonly property int rowSpacing: 2
-  readonly property int maxVisibleRows: 6
+  readonly property int rowHeight: 40
+  readonly property int rowSpacing: 5
+  readonly property int maxVisibleRows: 8
 
   Column {
     id: container

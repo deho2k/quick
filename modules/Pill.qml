@@ -3,7 +3,9 @@ pragma ComponentBehavior: Bound
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
-import "components"
+import "pills/main"
+import "pills/osd"
+import "pills/services"
 
 PanelWindow {
   id: root
@@ -12,7 +14,7 @@ PanelWindow {
   implicitHeight: contentLoader.height
   color: "transparent"
   anchors { top: true }
-  exclusiveZone: ExclusionMode.Ignore
+  exclusiveZone: ExclusionMode.Normal
 
   property Component mainPill: variants.smallPill
   property Component currentContent: variants.smallPill
@@ -33,6 +35,7 @@ PanelWindow {
     property Component submap: Submap {}
     property Component search: Search { needsFocus: true }
     property Component wallpaper: Wallpaper { needsFocus: true }
+    property Component settings: Settings { needsFocus: true }
   }
 
   Loader {
