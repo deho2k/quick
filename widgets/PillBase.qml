@@ -3,7 +3,7 @@ import qs.config
 
 Rectangle {
   radius: 16
-  color: Colors.alpha(Colors.background, Config.backgroundOpacity)
+  color: Colors.alpha(Colors.background, Config.general.backgroundOpacity)
   anchors.centerIn: parent 
   property bool needsFocus: false
   signal grapFocus()

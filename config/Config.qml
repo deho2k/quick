@@ -6,8 +6,8 @@ import Quickshell.Io
 Singleton {
   id: root
   property alias adapter: adapter
-  property alias backgroundOpacity: adapter.backgroundOpacity
-  property alias samsung: adapter.samsung
+  property alias hyprland: adapter.hyprland
+  property alias general: adapter.general
 
   FileView {
     id:settingsFile
@@ -18,8 +18,14 @@ Singleton {
 
     JsonAdapter {
       id: adapter
-      property real backgroundOpacity: 0.85
-      property real samsung: 0.85
+      property JsonObject general: JsonObject {
+        property real backgroundOpacity: 0.85
+        property bool samsung: true
+      }
+      property JsonObject hyprland: JsonObject {
+        property int borderSize: 2
+        property bool animations: true
+      }
     }
   }
   readonly property var settingsKeys: {
