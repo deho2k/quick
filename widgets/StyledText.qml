@@ -5,7 +5,7 @@ Text {
   id: dynamicText
   property bool textAnimation: true
   property bool textAnimateX: false
-  font.pixelSize: 22
+  font.pixelSize: Config.general.fontSize
   font.bold: true
   font.family: "JetBrainsMono Nerd Font"
   color: Colors.primary

@@ -3,17 +3,18 @@ pragma ComponentBehavior: Bound
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
+import qs.config
 import "pills/main"
 import "pills/osd"
 import "pills/services"
 
 PanelWindow {
   id: root
-  margins.top: 5; margins.bottom: 5
   implicitWidth: contentLoader.width
   implicitHeight: contentLoader.height
   color: "transparent"
-  anchors { top: true }
+  margins {top: Config.position.margins; bottom: Config.position.margins; right: Config.position.margins; left: Config.position.margins}
+  anchors {top: Config.position.top; bottom: Config.position.bottom; right: Config.position.right; left: Config.position.left }
   exclusiveZone: ExclusionMode.Normal
 
   property Component mainPill: variants.smallPill
@@ -21,7 +22,7 @@ PanelWindow {
   property alias variant: variants
 
   Timer { id: timer; interval: 2500; onTriggered: root.currentContent = root.mainPill }
-  function showVariant(variantContent) { root.currentContent = variantContent; timer.restart(); }
+  function showVariant(variantContent) { if (!contentLoader.item.needsFocus) {root.currentContent = variantContent; timer.restart()}}
   function changePill(pill) { root.currentContent = (root.currentContent == pill) ? root.mainPill : pill }
   function togglePillSize() { root.mainPill = variants.bigPill == root.mainPill ? variants.smallPill : variants.bigPill; root.currentContent = root.mainPill }
   function returnToMainPill() { root.currentContent = root.mainPill }
@@ -46,14 +47,18 @@ PanelWindow {
     height: item ? item.implicitHeight : 0
 
     Behavior on width { NumberAnimation { duration: 260; easing.type: Easing.OutExpo } }
-    Behavior on height { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1.15 } }
+    Behavior on height {
+      ParallelAnimation {
+        NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1.15 }
+        SequentialAnimation {
+          NumberAnimation { target: root; property: "margins.top"; to: Config.position.margins - 5; duration: 250; easing.type: Easing.OutBack }
+          NumberAnimation { target: root; property: "margins.top"; to: Config.position.margins; duration: 250; easing.type: Easing.OutBack }
+        }
+      }
+    }
 
     onSourceComponentChanged: {
-      if (item.needsFocus) {
-        root.WlrLayershell.keyboardFocus = WlrKeyboardFocus.Exclusive
-      } else {
-        root.WlrLayershell.keyboardFocus = WlrKeyboardFocus.OnDemand
-      }
+      root.WlrLayershell.keyboardFocus = item.needsFocus? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.OnDemand
     }
   }
 

@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Services.Mpris
 import QtQuick
 import qs.widgets
+import qs.config.services
 import qs.config
 
 PillBase {

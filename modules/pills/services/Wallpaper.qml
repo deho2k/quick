@@ -74,7 +74,7 @@ PillBase {
               event.accepted = true;
             }
             else if (event.key === Qt.Key_Return || event.key === Qt.Key_A) {
-              var temp = `awww img "${list.currentItem.filePath}" && matugen image "${list.currentItem.filePath}" --source-color-index 0 && qs ipc call colors reload`;
+              var temp = `awww img "${list.currentItem.filePath}" --transition-type wave && matugen image "${list.currentItem.filePath}" --source-color-index 0 && qs ipc call colors reload`;
               Quickshell.execDetached(["bash", "-c", temp])
               console.log(temp)
             }

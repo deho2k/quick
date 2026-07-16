@@ -1,7 +1,8 @@
+// add a side bar
 import Quickshell
 import QtQuick
 import qs.modules
-import qs.config
+import qs.config.services
 import Quickshell.Hyprland
 
 ShellRoot{
@@ -30,44 +31,34 @@ ShellRoot{
   }
 
   GlobalShortcut {
-    name: "show_variant_music" 
-    description: "temporarly shows the music osd" 
-    onPressed: { pill.showVariant(pill.variant.music) }
+    name: "show_variant_music"
+    description: "temporarly shows the music osd"
+    onPressed: pill.showVariant(pill.variant.music)
   }
   GlobalShortcut {
-    name: "toggle_bar" 
-    description: "toggles the quickshell pill" 
-    onPressed: {
-      pill.visible = !pill.visible
-    }
+    name: "toggle_bar"
+    description: "toggles the quickshell pill"
+    onPressed: pill.visible = !pill.visible
   }
   GlobalShortcut {
-    name: "toggle_pill" 
-    description: "toggles the quickshell pill's big pill" 
-    onPressed: {
-      pill.togglePillSize()
-    }
+    name: "toggle_pill"
+    description: "toggles the quickshell pill's big pill"
+    onPressed: pill.togglePillSize()
   }
 
   GlobalShortcut {
-    name: "toggle_search" 
-    description: "toggle the search pill" 
-    onPressed: {
-      pill.changePill(pill.variant.search)
-    }
+    name: "toggle_search"
+    description: "toggle the search pill"
+    onPressed: pill.changePill(pill.variant.search)
   }
   GlobalShortcut {
-    name: "toggle_settings" 
-    description: "toggle the settings pill" 
-    onPressed: {
-      pill.changePill(pill.variant.settings)
-    }
+    name: "toggle_settings"
+    description: "toggle the settings pill"
+    onPressed: pill.changePill(pill.variant.settings)
   }
   GlobalShortcut {
-    name: "toggle_wallpaper" 
-    description: "toggle the search pill" 
-    onPressed: {
-      pill.changePill(pill.variant.wallpaper)
-    }
+    name: "toggle_wallpaper"
+    description: "toggle the search pill"
+    onPressed: pill.changePill(pill.variant.wallpaper)
   }
 }

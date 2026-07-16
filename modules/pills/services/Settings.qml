@@ -11,25 +11,29 @@ PillBase {
   implicitHeight: container.implicitHeight + 20
 
   readonly property real step: 0.05
-  readonly property int labelChars: 20 // padding width, in characters (monospace font)
-  readonly property int rowHeight: 28
+  readonly property int rowHeight: 32
   property int page: 0
 
   function nextPage(direction) {
-    content.page = content.page + direction
-    page.text = Config.settingsKeys[content.page % Config.settingsKeys.length]
+    content.page = (content.page + direction) % Config.settingsKeys.length
+    page.text = Config.settingsKeys[content.page]
     list.currentIndex = 0
   }
 
   function adjustCurrentValue(direction) {
+    const category = Config.settingsKeys[content.page]
     const key = list.model[list.currentIndex]
-    const val = Config.adapter[key]
-
+    const val = Config.adapter[category][key]
     if (typeof val === "boolean") {
-      Config.adapter[key] = !val
+      Config.adapter[category][key] = !val
     } else if (typeof val === "number") {
-      const next = Math.min(1, Math.max(0, val + direction * content.step))
-      Config.adapter[key] = Math.round(next * 100) / 100
+      if (content.step && !Number.isInteger(content.step)) {
+        const next = Math.min(1, Math.max(0, val + direction * content.step))
+        Config.adapter[category][key] = Math.round(next * 100) / 100
+      } else {
+        const step = content.step || 1; // Fallback to 1 if no step is defined
+        Config.adapter[category][key] = Math.min(100, Math.max(0, val + direction * step))
+      }
     }
   }
 
@@ -38,18 +42,23 @@ PillBase {
     anchors.centerIn: parent
     spacing: 8
 
-    StyledText {
-      text: "Settings"
-      font.pixelSize: 14
-    }
-
-    StyledText {
-      id: page
-      textAnimateX: true
+    Row {
       anchors.leftMargin: 8
       anchors.horizontalCenter: parent.horizontalCenter
-      font.pixelSize: 12
-      text: "page"
+      StyledText {
+        font.pixelSize: 18
+        text: "< "
+      }
+      StyledText {
+        id: page
+        textAnimateX: true
+        font.pixelSize: 18
+        text: "page"
+      }
+      StyledText {
+        font.pixelSize: 18
+        text: " >"
+      }
     }
     ListView {
       id: list
@@ -57,8 +66,9 @@ PillBase {
       height: contentHeight
       interactive: false
       spacing: 2
-      model: Config.settingsKeys
+      model: Config.keysForPage(content.page)
       focus: true
+      Behavior on height { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1.15 } }
 
       Keys.onPressed: (event) => {
         if (event.key === Qt.Key_Down || event.key === Qt.Key_J) { list.incrementCurrentIndex(); event.accepted = true }
@@ -83,7 +93,8 @@ PillBase {
           anchors.verticalCenter: parent.verticalCenter
           anchors.left: parent.left
           anchors.leftMargin: 8
-          font.pixelSize: 12
+          font.bold: false
+          font.pixelSize: 16
           text: rowContainer.modelData.padEnd(content.labelChars, " ")
         }
         StyledText {
@@ -91,21 +102,17 @@ PillBase {
           anchors.right: parent.right
           anchors.rightMargin: 8
           textAnimateX: true
-          font.pixelSize: 12
-          text: String(Config.adapter[rowContainer.modelData])
+          font.pixelSize: 16
+          text: String(Config.adapter[Config.settingsKeys[content.page]][rowContainer.modelData])
         }
       }
     }
 
     StyledText {
       text: "k·j select - h·l adjust - Tab page"
-      font.pixelSize: 10
+      font.pixelSize: 12
       opacity: 0.5
     }
   }
-  Component.onCompleted: {
-    Config.hyprland.animations = true
-    content.nextPage(0)
-    console.log(Config.settingsKeys)
-  }
+  Component.onCompleted: {content.nextPage(0) }
 }
