@@ -11,23 +11,24 @@ Singleton {
 
   FileView {
     id:settingsFile
-    path: Quickshell.statePath("settings.json")
+    path: Quickshell.env("HOME") + "/.config/quickshell/config/json/settings.json"
     watchChanges: true
     onFileChanged: reload()
     onAdapterUpdated: writeAdapter()
 
     JsonAdapter {
       id: adapter
+      // page
       property JsonObject general: JsonObject {
-        property real backgroundOpacity: 0.85
-        property bool samsung: true
+        // properties inside the page
+        property int backgroundOpacity: 85
         property int radius: 8
         property int fontSize: 20
       }
       property JsonObject position: JsonObject {
+        property int margins: 5
         property bool top: true; property bool bottom: false
         property bool right: false; property bool left: false
-        property int margins: 5
       }
     }
   }

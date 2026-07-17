@@ -1,0 +1,14 @@
+{
+    "general": {
+        "backgroundOpacity": 100,
+        "fontSize": 20,
+        "radius": 8
+    },
+    "position": {
+        "bottom": false,
+        "left": false,
+        "margins": 5,
+        "right": false,
+        "top": true
+    }
+}

@@ -17,8 +17,8 @@ PanelWindow {
   anchors {top: Config.position.top; bottom: Config.position.bottom; right: Config.position.right; left: Config.position.left }
   exclusiveZone: ExclusionMode.Normal
 
-  property Component mainPill: variants.smallPill
-  property Component currentContent: variants.smallPill
+  property Component mainPill: variants.bigPill
+  property Component currentContent: mainPill
   property alias variant: variants
 
   Timer { id: timer; interval: 2500; onTriggered: root.currentContent = root.mainPill }
@@ -51,8 +51,8 @@ PanelWindow {
       ParallelAnimation {
         NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1.15 }
         SequentialAnimation {
-          NumberAnimation { target: root; property: "margins.top"; to: Config.position.margins - 5; duration: 250; easing.type: Easing.OutBack }
-          NumberAnimation { target: root; property: "margins.top"; to: Config.position.margins; duration: 250; easing.type: Easing.OutBack }
+          NumberAnimation { target: root; property: "margins.top"; to: Config.position.margins - 5; duration: 250; easing.type: Easing.InCurve }
+          NumberAnimation { target: root; property: "margins.top"; to: Config.position.margins; duration: 250; easing.type: Easing.InCurve }
         }
       }
     }

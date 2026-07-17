@@ -7,16 +7,16 @@ import Quickshell.Hyprland
 
 PillBase {
   id: content
-  implicitWidth: timeColumn.implicitWidth + 20
-  implicitHeight: timeColumn.implicitHeight + 20
+  implicitWidth: container.implicitWidth + 20
+  implicitHeight: container.implicitHeight + 20
   property var workspaces: Hyprland.workspaces.values.filter((w) => w.id > 0)
   Row {
-    id: timeColumn
+    id: container
     anchors.centerIn: parent 
     spacing: 20
     Row {
+      visible: Player.player != null
       StyledLabel {
-        visible: Player.player != null
         icon:  ""
         text: Player.player.trackArtist + " - " +Player.player.trackTitle 
       }

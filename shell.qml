@@ -3,6 +3,7 @@ import Quickshell
 import QtQuick
 import qs.modules
 import qs.config.services
+import qs.config
 import Quickshell.Hyprland
 
 ShellRoot{

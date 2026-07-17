@@ -10,7 +10,6 @@ PillBase {
   implicitWidth: container.implicitWidth + 20
   implicitHeight: container.implicitHeight + 20
 
-  readonly property real step: 0.05
   readonly property int rowHeight: 32
   property int page: 0
 
@@ -27,13 +26,8 @@ PillBase {
     if (typeof val === "boolean") {
       Config.adapter[category][key] = !val
     } else if (typeof val === "number") {
-      if (content.step && !Number.isInteger(content.step)) {
-        const next = Math.min(1, Math.max(0, val + direction * content.step))
-        Config.adapter[category][key] = Math.round(next * 100) / 100
-      } else {
-        const step = content.step || 1; // Fallback to 1 if no step is defined
-        Config.adapter[category][key] = Math.min(100, Math.max(0, val + direction * step))
-      }
+        const step = val >= 100? val >= 500? 20: 5 : 1
+        Config.adapter[category][key] =  Math.max(0,val + direction * step)
     }
   }
 
@@ -68,8 +62,6 @@ PillBase {
       spacing: 2
       model: Config.keysForPage(content.page)
       focus: true
-      Behavior on height { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1.15 } }
-
       Keys.onPressed: (event) => {
         if (event.key === Qt.Key_Down || event.key === Qt.Key_J) { list.incrementCurrentIndex(); event.accepted = true }
         else if (event.key === Qt.Key_Up || event.key === Qt.Key_K) { list.decrementCurrentIndex(); event.accepted = true }
@@ -114,5 +106,5 @@ PillBase {
       opacity: 0.5
     }
   }
-  Component.onCompleted: {content.nextPage(0) }
+  Component.onCompleted: { content.nextPage(0) }
 }
