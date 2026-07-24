@@ -14,9 +14,9 @@ PanelWindow {
   implicitHeight: contentLoader.height
   color: "transparent"
   margins {top: Config.position.margins; bottom: Config.position.margins; right: Config.position.margins; left: Config.position.margins}
-  anchors {top: Config.position.top; bottom: Config.position.bottom; right: Config.position.right; left: Config.position.left }
+  anchors {top: false; bottom: false; right: Config.position.right; left: Config.position.left }
   exclusionMode: ExclusionMode.Normal
-  exclusiveZone: mainPillMeasure.item.implicitHeight
+  exclusiveZone: mainPillMeasure.item.implicitWidth
 
   // Hidden, unanimated loader used only to measure mainPill's real size,
   // so the exclusion zone doesn't bounce with the visible Behavior/OutBack animation.

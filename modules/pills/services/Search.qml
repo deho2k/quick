@@ -13,7 +13,7 @@ PillBase {
   property var appModel: DesktopEntries.applications.values
   readonly property int rowHeight: 40
   readonly property int rowSpacing: 5
-  readonly property int maxVisibleRows: 8
+  readonly property int maxVisibleRows: 12
 
   Column {
     id: container
@@ -25,7 +25,7 @@ PillBase {
       color: Colors.primary
       radius: 5
       height: 20
-      width: 600
+      width: 250
       TextInput {
         id: searchInput
         anchors.fill: parent

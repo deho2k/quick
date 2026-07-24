@@ -27,7 +27,6 @@ Singleton {
       }
       property JsonObject position: JsonObject {
         property int margins: 5
-        property bool top: true; property bool bottom: false
         property bool right: false; property bool left: false
       }
     }

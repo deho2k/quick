@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Services.Mpris
+import Quickshell.Widgets
 import QtQuick
 import qs.widgets
 import qs.config.services
@@ -16,8 +17,8 @@ PillBase {
     : 0
   readonly property real volumeLevel: hasPlayer ? Math.max(0, Math.min(1, mprisPlayer.volume)) : 0
 
-  implicitWidth: container.width + 20
-  implicitHeight: container.height + 10
+  implicitWidth: 50
+  implicitHeight: mainColumn.implicitHeight + 24
 
   // keep position ticking while playing so the progress bar actually moves
   // (Quickshell doesn't poll position on its own — see MprisPlayer docs)
@@ -28,136 +29,129 @@ PillBase {
     onTriggered: root.mprisPlayer.positionChanged()
   }
 
-  Rectangle {
-    id: container
-    width: 320
-    height: mainColumn.implicitHeight + 28
+  Column {
+    id: mainColumn
     anchors.centerIn: parent
-    radius: 18
-    color: "transparent"
+    width: parent.width
+    spacing: 14
 
-    Column {
-      id: mainColumn
-      anchors.fill: parent
-      anchors.margins: 14
-      spacing: 10
+    // ---- album art / play state ---------------------------------------
+    ClippingRectangle {
+      id: artFrame
+      anchors.horizontalCenter: parent.horizontalCenter
+      width: 40
+      height: 40
+      radius: 10
+      clip: true
+      color: Colors.surface_variant
 
-      // ---- now playing row -----------------------------------------
-      Row {
-        width: parent.width
-        spacing: 10
-
-        Rectangle {
-          id: artFrame
-          width: 42
-          height: 42
-          radius: 10
-          clip: true
-          color: Colors.surface_variant
-          anchors.verticalCenter: parent.verticalCenter
-
-          Image {
-            id: art
-            anchors.fill: parent
-            source: root.hasPlayer ? (root.mprisPlayer.trackArtUrl || "") : ""
-            fillMode: Image.PreserveAspectCrop
-            asynchronous: true
-            visible: status === Image.Ready
-          }
-
-          StyledText {
-            anchors.centerIn: parent
-            visible: art.status !== Image.Ready
-            text: "♪"
-            font.pixelSize: 16
-            color: Colors.on_surface_variant
-          }
-        }
-
-        Column {
-          id: textCol
-          width: parent.width - artFrame.width - controls.width - parent.spacing * 2
-          spacing: 3
-          anchors.verticalCenter: parent.verticalCenter
-
-          StyledText {
-            width: parent.width
-            elide: Text.ElideRight
-            font.pixelSize: 13
-            font.bold: true
-            color: Colors.on_surface
-            text: root.hasPlayer ? (root.mprisPlayer.trackTitle || "Unknown Title") : "Nothing playing"
-          }
-
-          StyledText {
-            width: parent.width
-            elide: Text.ElideRight
-            font.pixelSize: 11
-            color: Colors.on_surface_variant
-            text: root.hasPlayer ? (root.mprisPlayer.trackArtist || "Unknown Artist") : ""
-          }
-        }
-
-        Row {
-          id: controls
-          spacing: 8
-          anchors.verticalCenter: parent.verticalCenter
-          Item {
-            width: 26
-            height: 26
-            StyledText {
-              anchors.centerIn: parent
-              text: root.isPlaying ? "⏸" : "▶"
-              font.pixelSize: 15
-              color: Colors.on_surface
-            }
-          }
-        }
+      Image {
+        id: art
+        anchors.fill: parent
+        source: root.hasPlayer ? (root.mprisPlayer.trackArtUrl || "") : ""
+        fillMode: Image.PreserveAspectCrop
+        asynchronous: true
+        visible: status === Image.Ready
       }
 
-      // ---- progress bar --------------------------------------------
+      StyledText {
+        anchors.centerIn: parent
+        visible: art.status !== Image.Ready
+        text: "♪"
+        font.pixelSize: 16
+        color: Colors.on_surface_variant
+      }
+    }
+
+    StyledText {
+      anchors.horizontalCenter: parent.horizontalCenter
+      text: root.isPlaying ? "⏸" : "▶"
+      font.pixelSize: 15
+      color: Colors.on_surface
+    }
+
+    // ---- title / artist, rotated to read along the sidebar ------------
+    Item {
+      id: trackInfo
+      anchors.horizontalCenter: parent.horizontalCenter
+      width: parent.width
+      height: 130 // budget for how much text can read before eliding
+
+      Column {
+        id: trackTextColumn
+        anchors.centerIn: parent
+        rotation: -90
+        width: trackInfo.height // pre-rotation width becomes the reading length
+        spacing: 2
+
+        StyledText {
+          width: parent.width
+          horizontalAlignment: Text.AlignHCenter
+          elide: Text.ElideRight
+          font.pixelSize: 16
+          font.bold: true
+          color: Colors.on_surface
+          text: root.hasPlayer ? (root.mprisPlayer.trackTitle || "Unknown Title") : "Nothing playing"
+        }
+
+        StyledText {
+          width: parent.width
+          horizontalAlignment: Text.AlignHCenter
+          elide: Text.ElideRight
+          font.pixelSize: 14
+          color: Colors.on_surface_variant
+          text: root.hasPlayer ? (root.mprisPlayer.trackArtist || "Unknown Artist") : ""
+        }
+      }
+    }
+
+    Rectangle { width: parent.width; height: 1; color: Colors.outline_variant; opacity: 0.4 }
+
+    // ---- progress (vertical fill) --------------------------------------
+    Rectangle {
+      anchors.horizontalCenter: parent.horizontalCenter
+      width: 3
+      height: 150
+      radius: 1.5
+      color: Colors.outline_variant
+
       Rectangle {
+        anchors.bottom: parent.bottom
         width: parent.width
-        height: 3
+        radius: parent.radius
+        color: Colors.primary
+        height: parent.height * root.progress
+        Behavior on height { NumberAnimation { duration: 250; easing.type: Easing.OutQuad } }
+      }
+    }
+
+    // ---- volume (vertical fill) -----------------------------------------
+    Column {
+      anchors.horizontalCenter: parent.horizontalCenter
+      spacing: 6
+
+      Rectangle {
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 3
+        height: 80
         radius: 1.5
         color: Colors.outline_variant
 
         Rectangle {
-          height: parent.height
+          anchors.bottom: parent.bottom
+          width: parent.width
           radius: parent.radius
-          color: Colors.primary
-          width: parent.width * root.progress
-          Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutQuad } }
+          color: Colors.secondary
+          height: parent.height * root.volumeLevel
+          Behavior on height { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
         }
       }
 
-      // ---- volume bar -------------------------------------------------
-      Row {
-        width: parent.width
-        spacing: 8
-
-        StyledText {
-          anchors.verticalCenter: parent.verticalCenter
-          text: root.volumeLevel <= 0 ? "󰝟" : (root.volumeLevel < 0.5 ? "󰖀" : "󰕾")
-          font.pixelSize: 11
-          color: Colors.on_surface_variant
-        }
-
-        Rectangle {
-          id: volumeTrack
-          width: parent.width - 24
-          height: 3
-          radius: 1.5
-          color: Colors.outline_variant
-          anchors.verticalCenter: parent.verticalCenter
-          Rectangle {
-            height: parent.height
-            radius: parent.radius
-            color: Colors.secondary
-            width: parent.width * root.volumeLevel
-            Behavior on width { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
-          }
-        }
+      StyledText {
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: root.volumeLevel <= 0 ? "󰝟" : (root.volumeLevel < 0.5 ? "󰖀" : "󰕾")
+        font.pixelSize: 11
+        color: Colors.on_surface_variant
       }
     }
   }

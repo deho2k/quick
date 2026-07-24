@@ -10,7 +10,7 @@ PillBase {
   implicitWidth: container.implicitWidth + 20
   implicitHeight: container.implicitHeight + 20
 
-  readonly property int rowHeight: 32
+  readonly property int rowHeight: 45
   property int page: 0
 
   function nextPage(direction) {
@@ -56,7 +56,7 @@ PillBase {
     }
     ListView {
       id: list
-      width: 280
+      width: 220
       height: contentHeight
       interactive: false
       spacing: 2
@@ -100,11 +100,6 @@ PillBase {
       }
     }
 
-    StyledText {
-      text: "k·j select - h·l adjust - Tab page"
-      font.pixelSize: 12
-      opacity: 0.5
-    }
   }
   Component.onCompleted: { content.nextPage(0) }
 }

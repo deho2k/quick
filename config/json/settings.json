@@ -1,14 +1,12 @@
 {
     "general": {
-        "backgroundOpacity": 70,
+        "backgroundOpacity": 71,
         "fontSize": 20,
         "radius": 8
     },
     "position": {
-        "bottom": false,
-        "left": false,
+        "left": true,
         "margins": 7,
-        "right": false,
-        "top": true
+        "right": false
     }
 }
