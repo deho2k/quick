@@ -4,7 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import qs.config
-import "pills/main"
+import "pills"
 import "pills/osd"
 import "pills/services"
 
@@ -15,22 +15,25 @@ PanelWindow {
   color: "transparent"
   margins {top: Config.position.margins; bottom: Config.position.margins; right: Config.position.margins; left: Config.position.margins}
   anchors {top: Config.position.top; bottom: Config.position.bottom; right: Config.position.right; left: Config.position.left }
-  exclusiveZone: ExclusionMode.Normal
+  exclusionMode: ExclusionMode.Normal
+  exclusiveZone: mainPillMeasure.item.implicitHeight
 
-  property Component mainPill: variants.bigPill
+  // Hidden, unanimated loader used only to measure mainPill's real size,
+  // so the exclusion zone doesn't bounce with the visible Behavior/OutBack animation.
+  Loader { id: mainPillMeasure; sourceComponent: root.mainPill; visible: false; }
+
+  property Component mainPill: variants.main
   property Component currentContent: mainPill
   property alias variant: variants
 
   Timer { id: timer; interval: 2500; onTriggered: root.currentContent = root.mainPill }
   function showVariant(variantContent) { if (!contentLoader.item.needsFocus) {root.currentContent = variantContent; timer.restart()}}
   function changePill(pill) { root.currentContent = (root.currentContent == pill) ? root.mainPill : pill }
-  function togglePillSize() { root.mainPill = variants.bigPill == root.mainPill ? variants.smallPill : variants.bigPill; root.currentContent = root.mainPill }
   function returnToMainPill() { root.currentContent = root.mainPill }
 
   Item {
     id: variants
-    property Component smallPill: SmallPill {}
-    property Component bigPill: BigPill {}
+    property Component main: Main {}
     property Component volume: Volume {}
     property Component music: Music {}
     property Component submap: Submap {}
