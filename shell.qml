@@ -41,12 +41,6 @@ ShellRoot {
     onPressed: pill.visible = !pill.visible
   }
   GlobalShortcut {
-    name: "toggle_pill"
-    description: "toggles the quickshell pill's big pill"
-    onPressed: pill.togglePillSize()
-  }
-
-  GlobalShortcut {
     name: "toggle_search"
     description: "toggle the search pill"
     onPressed: pill.changePill(pill.variant.search)
