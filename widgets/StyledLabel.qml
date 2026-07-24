@@ -5,7 +5,7 @@ Row {
   id: root
   property string icon: ""
   property string text: "text"
-  property int maxWidth: 220
+  property int maxWidth: 300
   StyledText {
     anchors.verticalCenter: parent.verticalCenter
     text: root.icon + " "
