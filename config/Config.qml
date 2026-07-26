@@ -21,6 +21,7 @@ Singleton {
       // page
       property JsonObject general: JsonObject {
         // properties inside the page
+        property int theme: 0
         property int backgroundOpacity: 85
         property int radius: 8
         property int fontSize: 20

@@ -5,9 +5,9 @@ Text {
   id: dynamicText
   property bool textAnimation: true
   property bool textAnimateX: false
-  font.pixelSize: Config.general.fontSize
   font.bold: true
-  font.family: "JetBrainsMono Nerd Font"
+  font.family: "CozetteVector"
+  font.pixelSize: Config.general.fontSize
   color: Colors.primary
   elide: Text.ElideRight
   transform: Translate { id: textTranslate; y: 0; x: 0 }

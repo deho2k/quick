@@ -2,6 +2,7 @@
 import Quickshell
 import QtQuick
 import qs.modules
+import qs.background
 import qs.config.services
 import Quickshell.Hyprland
 
@@ -9,6 +10,7 @@ ShellRoot {
   id: shellRoot
 
   Pill { id: pill }
+  Background { id: background }
 
   Connections {
     target: Player.player
@@ -40,6 +42,12 @@ ShellRoot {
     description: "toggles the quickshell pill"
     onPressed: pill.visible = !pill.visible
   }
+  GlobalShortcut {
+    name: "toggle_pill"
+    description: "toggles the quickshell pill's big pill"
+    onPressed: pill.togglePillSize()
+  }
+
   GlobalShortcut {
     name: "toggle_search"
     description: "toggle the search pill"

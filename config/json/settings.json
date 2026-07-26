@@ -1,8 +1,9 @@
 {
     "general": {
-        "backgroundOpacity": 71,
+        "backgroundOpacity": 85,
         "fontSize": 20,
-        "radius": 8
+        "radius": 6,
+        "theme": 0
     },
     "position": {
         "left": true,

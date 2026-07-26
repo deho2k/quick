@@ -32,12 +32,12 @@ PillBase {
     spacing: 4
 
     Rectangle {
-      height: 400
-      width: 1600
+      height: 1200
+      width: 400
       color: "transparent"
       ListView {
         id: list
-        orientation: ListView.Horizontal
+        orientation: ListView.Vertical
         model: wallpaperModel
         anchors.fill: parent
         spacing: 2
@@ -49,7 +49,7 @@ PillBase {
           width: 350
           height: 350
           color: "transparent"
-          anchors.verticalCenter: parent.verticalCenter
+          anchors.horizontalCenter: parent.horizontalCenter
           Image {
             opacity: wallpaperDelegate.isCurrent ? 1 : 0.2
             scale: wallpaperDelegate.isCurrent ? 1.1 : 1
@@ -65,11 +65,11 @@ PillBase {
         Keys.onPressed: (event) => {
           if(visible){
             Qt.callLater(() => list.positionViewAtIndex(list.currentIndex, ListView.Center))
-            if (event.key === Qt.Key_Right || event.key === Qt.Key_K) {
+            if (event.key === Qt.Key_Down || event.key === Qt.Key_J) {
               list.incrementCurrentIndex()
               event.accepted = true;
             } 
-            else if (event.key === Qt.Key_Left || event.key === Qt.Key_J) {
+            else if (event.key === Qt.Key_Up || event.key === Qt.Key_K) {
               list.decrementCurrentIndex()
               event.accepted = true;
             }
@@ -80,6 +80,7 @@ PillBase {
             }
           }
         }
+
         function goTo(path) {
           const idx = model.indexOf(path)
           if (idx !== -1) currentIndex = idx; Qt.callLater(() => list.positionViewAtIndex(list.currentIndex, ListView.Center))

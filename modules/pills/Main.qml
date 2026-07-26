@@ -4,11 +4,12 @@ import qs.widgets
 import qs.config.services
 import qs.config
 import Quickshell.Hyprland
+import Quickshell.Widgets
 
 PillBase {
   id: content
   implicitWidth: 50
-  implicitHeight: column.implicitHeight + 24
+  implicitHeight: column.implicitHeight + 12
   property var workspaces: Hyprland.workspaces.values.filter((w) => w.id > 0)
 
   Column {
@@ -16,7 +17,6 @@ PillBase {
     anchors.centerIn: parent
     width: parent.width - 12
     spacing: 18
-
     Column {
       anchors.horizontalCenter: parent.horizontalCenter
       spacing: 2
@@ -30,66 +30,72 @@ PillBase {
         text: Qt.formatDateTime(clock.date, "mm")
         font.pixelSize: Config.general.fontSize
       }
-      Rectangle {
-        width: 30
-        height: 40
-        color: Colors.secondary_container
-        radius: 6
-
-        Column {
-          anchors.centerIn: parent
-          StyledText {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: Qt.formatDateTime(clock.date, "d")
-            font.pixelSize: Config.general.fontSize * 0.6
-            color: Colors.secondary
-          }
-          StyledText {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: Qt.formatDateTime(clock.date, "MM")
-            font.pixelSize: Config.general.fontSize * 0.6
-            color: Colors.secondary
-          }
-        }
-      }
     }
 
-    Rectangle { width: parent.width; height: 1; color: Colors.outline_variant; opacity: 0.4 }
-
-    // -- workspaces ------------------------------------------------------
-    Column {
+    Item {
       anchors.horizontalCenter: parent.horizontalCenter
-      spacing: 6
-      Repeater {
+      height: 120
+      width: 20
+      ListView {
+        anchors.centerIn: parent
+        width: parent.width
+        height: Math.min(parent.height, contentHeight)
+        spacing: 6
+        interactive: false // Disables touch/drag scrolling since this is an indicator
+        Behavior on height { NumberAnimation { duration: 360; easing.type: Easing.OutExpo } }
+
         model: content.workspaces
-        Rectangle {
-          anchors.horizontalCenter: parent.horizontalCenter
+        delegate: Rectangle {
+          anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
+
           Behavior on height { NumberAnimation { duration: 360; easing.type: Easing.OutExpo } }
+          Behavior on width { NumberAnimation { duration: 360; easing.type: Easing.OutExpo } }
           Behavior on color { ColorAnimation { duration: 260 } }
-          color: modelData.id == Hyprland.focusedWorkspace.id ? Colors.primary : Colors.primary_container
-          radius: 6
-          width: Config.general.fontSize * 0.8
-          height: modelData.id == Hyprland.focusedWorkspace.id ? Config.general.fontSize * 1 : Config.general.fontSize * 0.8
+
+          radius: 1
+          color: Hyprland.activeToplevel.workspace.id < 0 && modelData.id == Hyprland.focusedWorkspace.id 
+            ? "limegreen" 
+            : modelData.id == Hyprland.focusedWorkspace.id 
+            ? Colors.primary 
+            : Colors.primary_container
+
+          width: Hyprland.activeToplevel.workspace.id < 0 && modelData.id == Hyprland.focusedWorkspace.id 
+            ? Config.general.fontSize 
+            : Config.general.fontSize * 0.7
+          height: modelData.id == Hyprland.focusedWorkspace.id 
+            ? Config.general.fontSize 
+            : Config.general.fontSize * 0.7
         }
       }
     }
+
 
     Column {
       visible: Player.player != null
       anchors.horizontalCenter: parent.horizontalCenter
       spacing: 8
 
-      Rectangle { width: column.width; height: 1; color: Colors.outline_variant; opacity: 0.4 }
 
-      StyledText {
+      ClippingRectangle {
+        id: artFrame
         anchors.horizontalCenter: parent.horizontalCenter
-        text: ""
-        font.pixelSize: Config.general.fontSize * 0.8
-      }
-      StyledText {
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: Player.player && Player.player.isPlaying ? "⏸" : "▶"
-        font.pixelSize: Config.general.fontSize * 0.6
+        width: 42
+        height: 42
+        radius: content.radius
+        Image {
+          id: art
+          anchors.fill: parent
+          source: Player.player.trackArtUrl
+          fillMode: Image.PreserveAspectCrop
+          asynchronous: true
+          visible: status === Image.Ready
+        }
+        StyledText {
+          anchors.centerIn: parent
+          text: Player.player && Player.player.isPlaying ? "⏸" : "▶"
+          color: "black"
+          font.pixelSize: Config.general.fontSize
+        }
       }
     }
   }
