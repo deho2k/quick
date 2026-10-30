@@ -11,6 +11,7 @@ ShellRoot {
 
   Pill { id: pill }
   Background { id: background }
+  Overlay {}
 
   Connections {
     target: Player.player
